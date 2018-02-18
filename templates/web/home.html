@@ -1,0 +1,33 @@
+{% load static %}
+<html>
+<head>
+	<title></title>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+	<!-- Include the above in your HEAD tag -->
+
+	<link rel="stylesheet" type="text/css" href="{% static '' %}css/home.css">
+
+</head>
+<body>
+	<div>
+	   <div class="modal-dialog">
+			<div class="loginmodal-container">
+			<h1>KasPeru Login</h1><br>
+			<form>
+				<input type="text" name="user" placeholder="Username">
+				<input type="password" name="pass" placeholder="Password">
+				<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+			</form>
+						
+				<div class="login-help">
+					¿No tiene una cuenta?<a href=""></a> - <a href="{% url 'web:create_account' %}" style="color: #0067b8">Crear una</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
