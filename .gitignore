@@ -7,7 +7,7 @@
 __pycache__/
 src/settings/settings.json
 db.sqlite3
-src/media/
+/media/
 #src/static/*
 # End of https://www.gitignore.io/api/django
 

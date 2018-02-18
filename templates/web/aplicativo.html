@@ -10,34 +10,47 @@
 
     <link rel="stylesheet" type="text/css" href="{% static '' %}css/home.css">
     <script type="text/javascript" src="{% static '' %}js/aplicativo.js"></script>
+
+    <!-- js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
-<div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-2">
     <h3>Ingrese el archivo csv</h3>
-<form method="POST" action="#" enctype="multipart/form-data">
-    <!-- COMPONENT START -->
-    <div class="form-group">
-        <div class="input-group input-file" name="Fichier1">
-            <span class="input-group-btn">
-                <button class="btn btn-default btn-choose" type="button">Choose</button>
-            </span>
-            <input type="text" class="form-control" placeholder='Choose a file...' />
-            <span class="input-group-btn">
-                 <button class="btn btn-warning btn-reset" type="button">Reset</button>
-            </span>
-        </div>
+        <form method="POST" action="{% url 'web:aplicativo' %}" enctype="multipart/form-data" class="form_archivo">
+            {% csrf_token %}
+            <!-- COMPONENT START -->
+            <div class="form-group">
+                <div class="input-group input-file" name="Fichier1">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-choose" type="button">Choose</button>
+                    </span>
+                    <input type="text" class="form-control" name="archivo" {% if not flag_archivo %} placeholder='Choose a file...' {% else %} placeholder="prueba.csv"  {% endif %}/>
+                    <span class="input-group-btn">
+                         <button class="btn btn-warning btn-reset" type="button">Reset</button>
+                    </span>
+                </div>
+            </div>
+            <button class="btn btn-primary carga"> Cargar </button>
+            {% if flag_archivo %}
+                <button class="btn btn-success"> Visualizar 50 primera filas </button>
+            {% endif %}
+            <!-- COMPONENT END -->
+        </form>
+
     </div>
-    <button class="btn btn-primary"> Cargar </button>
-
-    <button class="btn btn-success"> Visualizar 50 primera filas </button>
-    <!-- COMPONENT END -->
-
-</form>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('.carga').click(function(e){
+        e.preventDefault();
+        alert("Paisa")
+        $('.form_archivo').submit()
         
-
-</div>
-</div>
+    })
+})
+</script>
 </body>
 </html>
 

@@ -11,13 +11,14 @@ NUMERO_DE_ITERACIONES = 500
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     email = models.EmailField()
-
+    archivo_csv = models.FileField(upload_to="uploads",
+                                   blank=True, null=True)
     class Meta:
         verbose_name = 'Perfil'
         verbose_name_plural = 'Perfiles'
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.first_name, self.last_name)
+        return u'{0}'.format(self.email)
 
     def is_password_valid(self, password):
         return is_password_valid(password, self.password)

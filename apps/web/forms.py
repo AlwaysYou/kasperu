@@ -30,7 +30,7 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = (
-            'first_name', 'last_name', 'document_number', 'telephone', 'email', 'is_suscriber',)
+             'email',)
 
 
 class LoginForm(forms.Form):
@@ -59,4 +59,4 @@ class LoginForm(forms.Form):
         username = profile.user.username
 
         return authenticate(username=username, password=password)
-
+    
