@@ -1,0 +1,43 @@
+{% load static %}
+<html>
+<head>
+    <title>Kasperu | Aplicativo</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <!-- Include the above in your HEAD tag -->
+
+    <link rel="stylesheet" type="text/css" href="{% static '' %}css/home.css">
+    <script type="text/javascript" src="{% static '' %}js/aplicativo.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="col-md-8 col-md-offset-2">
+    <h3>Ingrese el archivo csv</h3>
+<form method="POST" action="#" enctype="multipart/form-data">
+    <!-- COMPONENT START -->
+    <div class="form-group">
+        <div class="input-group input-file" name="Fichier1">
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-choose" type="button">Choose</button>
+            </span>
+            <input type="text" class="form-control" placeholder='Choose a file...' />
+            <span class="input-group-btn">
+                 <button class="btn btn-warning btn-reset" type="button">Reset</button>
+            </span>
+        </div>
+    </div>
+    <button class="btn btn-primary"> Cargar </button>
+
+    <button class="btn btn-success"> Visualizar 50 primera filas </button>
+    <!-- COMPONENT END -->
+
+</form>
+        
+
+</div>
+</div>
+</body>
+</html>
+
