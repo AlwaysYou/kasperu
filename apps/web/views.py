@@ -79,6 +79,7 @@ def aplicativo(request):
                 userprofile.archivo_csv = request.FILES['Fichier1']
                 userprofile.save()
                 # Se guardo el archivo correctamente
+                return redirect('web:aplicativo')
 
         elif tipo == "form-2":
             file_data = archivo.read().decode("utf-8")
