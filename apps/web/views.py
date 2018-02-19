@@ -35,6 +35,11 @@ def home(request):
         else:
             print(form.errors, "<- errors")
             print("FORM INVALIDO")
+
+    if request.user.is_authenticated:
+        print(request.user)
+        return redirect('web:aplicativo')
+
     return render(request, 'web/home.html', locals())
 
 def create_account(request):
@@ -44,7 +49,6 @@ def create_account(request):
         print("soy post")
         if profile_form.is_valid():
             print("soy valido")
-            # Falta validar las contrasenas en el js
             password = request.POST['password']
             profile_form.save(password)
 
@@ -52,7 +56,6 @@ def create_account(request):
             login(request, user)
             return redirect(reverse('web:aplicativo'))
         else:
-            print("FALSO no es valido este profile")
             profile_form = RegisterForm()
             return HttpResponseRedirect("/?error/")
     return render(request, 'web/create_account.html', locals())
@@ -175,7 +178,6 @@ def aplicativo(request):
 
     return render(request, 'web/aplicativo.html', locals())
 
-# muestra de CSV 50 filas
 
 def mostrar_csv(request):
     userprofile = UserProfile.objects.get(user__id=request.user.id)
