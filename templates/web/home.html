@@ -16,9 +16,10 @@
 	   <div class="modal-dialog">
 			<div class="loginmodal-container">
 			<h1>KasPeru Login</h1><br>
-			<form>
-				<input type="text" name="user" placeholder="Username">
-				<input type="password" name="pass" placeholder="Password">
+			<form class="form-login" method="POST" action="{% url 'web:home' %}">
+				{% csrf_token %}
+				<input type="text" name="email" placeholder="Correo Electronico" class="validate[required]">
+				<input type="password" name="password" placeholder="Password" class="validate[required]">
 				<input type="submit" name="login" class="login loginmodal-submit" value="Login">
 			</form>
 						
@@ -28,6 +29,29 @@
 			</div>
 		</div>
 	</div>
+<script type="text/javascript" src="{% static 'js/jquery.validationEngine-es.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.validationEngine.js' %}"></script>
+<script type="text/javascript">
+$(function(){
+	$("form").validationEngine('attach', {
+		promptPosition : "topLeft",
+		autoHidePrompt: true,
+		autoHideDelay: 3000,
+		binded: false,
+		scroll: false
+	});
+
+    $('.login').click(function(e){
+        e.preventDefault();
+		var valid = $('.form-login').validationEngine('validate');
+		if(valid){
+			$('.form-login').submit()
+		}
+        
+    })
+})
+</script>
 </body>
+
 </html>
 

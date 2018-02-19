@@ -2,21 +2,38 @@ from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import UserProfile
-from xlrd import open_workbook
-from .forms import RegisterForm
+
+from .forms import RegisterForm, LoginForm
 import os
 import csv
+from django.core.urlresolvers import reverse_lazy
+
 # Create your views here.
 from django.contrib.auth import login
 from django.conf import settings
 # histogram
-
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
 
-def home(request):
+#logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import logout_then_login
 
+def home(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.auth()
+            if user:
+                login(request, user)
+                return redirect("web:aplicativo")
+                print("LOGIN DENTOR DEL IF USER")
+            else:
+                print("NO EXISTE USER")
+        else:
+            print(form.errors, "<- errors")
+            print("FORM INVALIDO")
     return render(request, 'web/home.html', locals())
 
 def create_account(request):
@@ -40,6 +57,8 @@ def create_account(request):
     return render(request, 'web/create_account.html', locals())
 
 
+
+@login_required(login_url=reverse_lazy('web:home'))
 def aplicativo(request):
     userprofile = UserProfile.objects.get(user__id=request.user.id)
 
@@ -55,6 +74,7 @@ def aplicativo(request):
             if request.FILES.get('Fichier1'):
                 userprofile.archivo_csv = request.FILES['Fichier1']
                 userprofile.save()
+                # Se guardo el archivo correctamente
 
         elif tipo == "form-2":
             file_data = archivo.read().decode("utf-8")
@@ -63,13 +83,16 @@ def aplicativo(request):
             for line in lines:
                 fields = line.split(",")
                 lista_general.append(fields)
-        # conteo para completar las 50 filas
+            # conteo para completar las 50 filas
             numero_actual = len(lista_general)
             faltantes = 50 - numero_actual
-            # falta si es positivo....
+            # falta si es positivo *
             if faltantes > 0:
                 rango = range(0, faltantes)
-        if tipo == "form-3":
+                print(rango)
+
+        elif tipo == "form-3":
+            #Creacion de histogramas
             file_data = archivo.read().decode("utf-8")
             lines = file_data.split("\n")
             list_edades = []
@@ -81,8 +104,6 @@ def aplicativo(request):
                 list_pesos.append(fields[2])
                 list_estatura.append(fields[3])
             list_edades[0] = '0'
-            print(len(list_edades), "<- len(list_edades)")
-            print(list_edades, "<- list_edades")
             x = np.arange(len(list_edades))
             plt.bar(x, height=list_edades)
             plt.xticks(x, ["Edad 1", "Edad 2", "Edad 3", "Edad 4", "Edad 5"])
@@ -115,3 +136,10 @@ def mostrar_csv(request):
             print(row)
 
     return render(request, 'web/aplicativo.html', locals())
+
+
+@login_required(login_url=reverse_lazy('web:home'))
+def user_logout(request):
+    request.session.flush()
+    return logout_then_login(request, reverse('web:home'))
+

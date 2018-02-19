@@ -9,11 +9,23 @@
     <!-- Include the above in your HEAD tag -->
 
     <link rel="stylesheet" type="text/css" href="{% static '' %}css/home.css">
+    <link rel="stylesheet" type="text/css" href="{% static '' %}css/login.css">
     <script type="text/javascript" src="{% static '' %}js/aplicativo.js"></script>
 
     <!-- js -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
+
+<header>
+    {% if request.user.is_authenticated %}
+        <div class="boton_logout">
+            <a href="{% url 'web:user_logout' %}">
+                <input type="button" value="Logout" class="logout"/>
+            </a>
+        </div>
+    {% endif %}
+</header>
+
 <body>
 <div class="container">
     <div class="col-md-8 col-md-offset-2">
