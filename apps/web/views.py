@@ -70,6 +70,8 @@ def aplicativo(request):
     if userprofile.archivo_csv:
         flag_archivo = True
         archivo = userprofile.archivo_csv
+        archivo_text = str(archivo)
+        print(archivo_text, "-- archivo")
         # Falta: que solo muestre el archivo
     if request.method == "POST":
         tipo = request.POST.get('tipo_form')

@@ -38,7 +38,7 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default btn-choose" type="button">Choose</button>
                 </span>
-                <input type="text" class="form-control" name="archivo" {% if not flag_archivo %} placeholder='Choose a file...' {% else %} placeholder="prueba.csv"  {% endif %}  class="validate[required]"/ >
+                <input type="text" class="form-control" id="archivo_form" name="archivo" {% if not flag_archivo %} placeholder='Choose a file...' {% else %} placeholder="{{archivo_text}}"  {% endif %}  class="validate[required]"/ >
                 <span class="input-group-btn">
                      <button class="btn btn-warning btn-reset" type="button">Reset</button>
                 </span>
@@ -182,6 +182,11 @@ $(function(){
     $('.mostrar_3m_2').click(function(e){
         e.preventDefault();
         $('.mostrar_3m').click();
+    })
+    $('.btn-reset').click(function(e){
+        e.preventDefault();
+        alert("intento 2")
+        $('#archivo_form').attr('placeholder', "Seleccione un archivo por favor :) ")
     })
     
 })
