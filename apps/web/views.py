@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .models import UserProfile
 from xlrd import open_workbook
 from .forms import RegisterForm
@@ -9,6 +9,12 @@ import csv
 # Create your views here.
 from django.contrib.auth import login
 from django.conf import settings
+# histogram
+
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib.pyplot as plt
+import numpy as np
+
 def home(request):
 
     return render(request, 'web/home.html', locals())
@@ -45,10 +51,10 @@ def aplicativo(request):
     if request.method == "POST":
         tipo = request.POST.get('tipo_form')
         if tipo == "form-1":
-            print(tipo, "<- tipo")
             userprofile = UserProfile.objects.get(user__id=request.user.id)
-            userprofile.archivo_csv = request.FILES['Fichier1']
-            userprofile.save()
+            if request.FILES.get('Fichier1'):
+                userprofile.archivo_csv = request.FILES['Fichier1']
+                userprofile.save()
 
         elif tipo == "form-2":
             file_data = archivo.read().decode("utf-8")
@@ -58,10 +64,39 @@ def aplicativo(request):
                 fields = line.split(",")
                 lista_general.append(fields)
         # conteo para completar las 50 filas
-        numero_actual = len(lista_general)
-        faltantes = 50 - numero_actual
-        if faltantes > 0:
-            rango = range(0, faltantes)
+            numero_actual = len(lista_general)
+            faltantes = 50 - numero_actual
+            # falta si es positivo....
+            if faltantes > 0:
+                rango = range(0, faltantes)
+        if tipo == "form-3":
+            file_data = archivo.read().decode("utf-8")
+            lines = file_data.split("\n")
+            list_edades = []
+            list_pesos = []
+            list_estatura = []
+            for line in lines:
+                fields = line.split(",")
+                list_edades.append(fields[0])
+                list_pesos.append(fields[2])
+                list_estatura.append(fields[3])
+            list_edades[0] = '0'
+            print(len(list_edades), "<- len(list_edades)")
+            print(list_edades, "<- list_edades")
+            x = np.arange(len(list_edades))
+            plt.bar(x, height=list_edades)
+            plt.xticks(x, ["Edad 1", "Edad 2", "Edad 3", "Edad 4", "Edad 5"])
+            f = plt.figure(1)
+            plt.hist(x, normed=True, bins=15)
+
+            plt.xlabel('X')
+            plt.ylabel('Frequency')
+            plt.title('Histograma de Edades')
+            canvas = FigureCanvas(f)
+            response = HttpResponse(content_type='image/png')
+            canvas.print_png(response)
+            plt.close()
+            return response
 
     return render(request, 'web/aplicativo.html', locals())
 

@@ -21,28 +21,27 @@
     <form method="POST" action="{% url 'web:aplicativo' %}" enctype="multipart/form-data" class="form_archivo">
         {% csrf_token %}
         <input type="hidden" name="tipo_form" value="form-1">
-        <!-- COMPONENT START -->
         <div class="form-group">
             <div class="input-group input-file" name="Fichier1">
                 <span class="input-group-btn">
                     <button class="btn btn-default btn-choose" type="button">Choose</button>
                 </span>
-                <input type="text" class="form-control" name="archivo" {% if not flag_archivo %} placeholder='Choose a file...' {% else %} placeholder="prueba.csv"  {% endif %}/>
+                <input type="text" class="form-control" name="archivo" {% if not flag_archivo %} placeholder='Choose a file...' {% else %} placeholder="prueba.csv"  {% endif %}  class="validate[required]"/ >
                 <span class="input-group-btn">
                      <button class="btn btn-warning btn-reset" type="button">Reset</button>
                 </span>
             </div>
         </div>
         <button class="btn btn-primary carga"> Cargar </button>
+        <button type="button" class="btn btn-success mostrar_csv_2"> Visualizar 50 primera filas </button>
     </form>
 
     <form class="form-muestra-archivo" method="POST" action="{% url 'web:aplicativo' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="Fichier1" value="{{archivo}}">
         <input type="hidden" name="tipo_form" value="form-2">
-        <button type="submit" class="btn btn-success mostrar_csv"> Visualizar 50 primera filas </button>
+        <button type="submit" class="btn btn-success mostrar_csv" style="display:none"> Visualizar 50 primera filas </button>
     </form>
-            <!-- COMPONENT END -->
     <!-- 50 rows -->
 
     <div class="container-fluid">
@@ -70,26 +69,52 @@
                 </tr>
             {% endfor %}
             </table>
-        </div>
+    </div>
+    <!-- Histogramas -->
 
-
+    <form class="form-muestra-histogramas" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="tipo_form" value="form-3">
+        <button class="btn btn-warning mostrar_histogramas"> Generar Histogramas </button>
+    </form>
 
     </div>
 </div>
+<script type="text/javascript" src="{% static 'js/jquery.validationEngine-es.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.validationEngine.js' %}"></script>
 <script type="text/javascript">
 $(function(){
+    $("form").validationEngine('attach', {
+        promptPosition : "topLeft",
+        autoHidePrompt: true,
+        autoHideDelay: 3000,
+        binded: false,
+        scroll: false
+    });
+
     $('.carga').click(function(e){
         e.preventDefault();
-        alert("Paisa")
-        $('.form_archivo').submit()
-        
+        var valid = $('.form_archivo').validationEngine('validate');
+        alert(valid, "<- valid")
+        if(valid){       
+            $('.form_archivo').submit()
+        }
     })
     $('.mostrar_csv').click(function(e){
         e.preventDefault();
-        alert("mostrar csv")
         $('.form-muestra-archivo').submit()
 
     })
+    $('.mostrar_csv_2').click(function(e){
+        console.log("A");       
+        $('.mostrar_csv').click();
+    })
+
+    $('.mostrar_histogramas').click(function(e){
+        e.preventDefault();
+        $('.form-muestra-histogramas').submit();
+    })
+
 })
 </script>
 </body>
