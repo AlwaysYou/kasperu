@@ -15,6 +15,7 @@ from django.conf import settings
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
+from statistics import median, mode, mean, StatisticsError
 
 #logout
 from django.contrib.auth.decorators import login_required
@@ -99,10 +100,11 @@ def aplicativo(request):
             list_pesos = []
             list_estatura = []
             for line in lines:
-                fields = line.split(",")
-                list_edades.append(fields[0])
-                list_pesos.append(fields[2])
-                list_estatura.append(fields[3])
+                if line:
+                    fields = line.split(",")
+                    list_edades.append(fields[0])
+                    list_pesos.append(fields[2])
+                    list_estatura.append(fields[3])
             list_edades[0] = '0'
             x = np.arange(len(list_edades))
             plt.bar(x, height=list_edades)
@@ -118,6 +120,58 @@ def aplicativo(request):
             canvas.print_png(response)
             plt.close()
             return response
+
+        elif tipo == "form-4":
+            flag_form_4 = True
+            file_data = archivo.read().decode("utf-8")
+            lines = file_data.split("\n")
+            list_edades = []
+            list_pesos = []
+            list_estatura = []
+            for line in lines:
+                if line:
+                    fields = line.split(",")
+                    list_edades.append(fields[0])
+                    list_pesos.append(fields[2])
+                    list_estatura.append(fields[3])
+            list_edades.pop(0)
+            list_pesos.pop(0)
+            list_estatura.pop(0)
+
+            list_edades_int = []
+            for row in list_edades:
+                list_edades_int.append(float(row))
+
+            list_pesos_int = []
+            for row in list_pesos:
+                list_pesos_int.append(float(row))
+
+            list_estatura_int = []
+            for row in list_estatura:
+                list_estatura_int.append(float(row))
+            print(list_edades_int, list_pesos_int, list_estatura_int, "<-JA")
+            #Moda
+            try:
+                edades_mode = mode(list_edades_int)
+            except StatisticsError:
+                edades_mode = "No unique mode found"
+            try:
+                pesos_mode = mode(list_pesos_int)
+            except StatisticsError:
+                pesos_mode = "No unique mode found"
+            try:
+                estaturas_mode = mode(list_estatura_int)
+            except StatisticsError:
+                estaturas_mode = "No unique mode found"
+
+            # Media
+            edades_media = mean(list_edades_int)
+            pesos_media = mean(list_pesos_int)
+            estaturas_media = mean(list_estatura_int)      
+            # Mediana
+            edades_mediana = median(list_edades_int)
+            pesos_mediana = median(list_pesos_int)
+            estaturas_mediana = median(list_estatura_int)
 
     return render(request, 'web/aplicativo.html', locals())
 

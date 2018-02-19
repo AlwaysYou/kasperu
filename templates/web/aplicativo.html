@@ -44,8 +44,15 @@
                 </span>
             </div>
         </div>
+        <br>
         <button class="btn btn-primary carga"> Cargar </button>
-        <button type="button" class="btn btn-success mostrar_csv_2"> Visualizar 50 primera filas </button>
+        {% if archivo %}
+            <button type="button" class="btn btn-success mostrar_csv_2"> Visualizar 50 primera filas </button>
+
+        <button type="button" class="btn btn-warning mostrar_histogramas_2"> Generar Histogramas </button>
+        <button class="btn btn-warning mostrar_3m_2"> Generar Media, Mediana y la Moda </button>
+        {% endif %}
+
     </form>
 
     <form class="form-muestra-archivo" method="POST" action="{% url 'web:aplicativo' %}" enctype="multipart/form-data">
@@ -87,7 +94,46 @@
     <form class="form-muestra-histogramas" method="POST">
         {% csrf_token %}
         <input type="hidden" name="tipo_form" value="form-3">
-        <button class="btn btn-warning mostrar_histogramas"> Generar Histogramas </button>
+        <button style="display:none" class="btn btn-warning mostrar_histogramas"> Generar Histogramas </button>
+    </form>
+
+    <form class="form-3m" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="tipo_form" value="form-4">
+        <button style="display:none" class="btn btn-warning mostrar_3m"> Generar Media, Mediana y la Moda </button>
+        {% if flag_form_4 %}
+            <div class="container-fluid">
+                <div class="table-responsive"></div>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <tr class="success">
+                            <td>&nbsp;</td>
+                            <td>Edad</td>
+                            <td>Peso</td>
+                            <td>Estatura</td>
+                        </tr>
+                        <tr{% if forloop.first%} class="success" {%endif %}>
+                            <td>Media</td>
+                            <td>{{edades_media}}</td>
+                            <td>{{pesos_media}}</td>
+                            <td>{{estaturas_media}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mediana</td>
+                            <td>{{edades_mediana}}</td>
+                            <td>{{pesos_mediana}}</td>
+                            <td>{{estaturas_mediana}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>Moda</td>
+                            <td>{{edades_mode}}</td>
+                            <td>{{pesos_mode}}</td>
+                            <td>{{estaturas_mode}}</td>
+
+                        </tr>
+                    </table>
+            </div>
+        {% endif %}
     </form>
 
     </div>
@@ -107,7 +153,6 @@ $(function(){
     $('.carga').click(function(e){
         e.preventDefault();
         var valid = $('.form_archivo').validationEngine('validate');
-        alert(valid, "<- valid")
         if(valid){       
             $('.form_archivo').submit()
         }
@@ -126,7 +171,19 @@ $(function(){
         e.preventDefault();
         $('.form-muestra-histogramas').submit();
     })
-
+    $('.mostrar_histogramas_2').click(function(e){
+        e.preventDefault();
+        $('.mostrar_histogramas').click();
+    })
+    $('.mostrar_3m').click(function(e){
+        e.preventDefault();
+        $('.form-3m').submit();
+    })
+    $('.mostrar_3m_2').click(function(e){
+        e.preventDefault();
+        $('.mostrar_3m').click();
+    })
+    
 })
 </script>
 </body>
