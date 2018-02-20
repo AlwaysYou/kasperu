@@ -14,8 +14,8 @@ class UserProfile(models.Model):
     archivo_csv = models.FileField(upload_to="uploads",
                                    blank=True, null=True)
     class Meta:
-        verbose_name = 'Perfil'
-        verbose_name_plural = 'Perfiles'
+        verbose_name = 'Usuarios Registrados'
+        verbose_name_plural = 'Usuarios Registrados'
 
     def __unicode__(self):
         return u'{0}'.format(self.email)
